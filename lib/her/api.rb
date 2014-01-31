@@ -88,7 +88,7 @@ module Her
       opts.delete_if { |key, value| key.to_s =~ /^_/ } # Remove all internal parameters
       response = @connection.send method do |request|
         request.headers.merge!(headers) if headers
-        if method == :get
+        if method == :get || method == :delete
           # For GET requests, treat additional parameters as querystring data
           request.url path, opts
         else
