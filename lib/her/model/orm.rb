@@ -74,7 +74,7 @@ module Her
       def destroy(params = {})
         method = self.class.method_for(:destroy)
         run_callbacks :destroy do
-          self.class.request(params.merge(:_method => method), :_path => request_path) do |parsed_data, response|
+          self.class.request(params.merge(:_method => method, :_path => request_path)) do |parsed_data, response|
             assign_attributes(self.class.parse(parsed_data[:data])) if parsed_data[:data].any?
             @metadata = parsed_data[:metadata]
             @response_errors = parsed_data[:errors]

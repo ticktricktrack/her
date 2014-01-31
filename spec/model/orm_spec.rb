@@ -411,6 +411,29 @@ describe Her::Model::ORM do
       @user.active.should be_false
       @user.should be_destroyed
     end
+
+    context "with params" do
+      before do
+        Her::API.setup :url => "https://api.example.com" do |builder|
+          builder.adapter :test do |stub|
+            stub.delete("/users/1?delete_type=soft") { |env| [200, {}, { :id => 1, :fullname => "Lindsay Fünke", :active => false }.to_json] }
+          end
+        end
+      end
+
+      it "handle resource deletion through the .destroy class method" do
+        @user = Foo::User.destroy_existing(1, delete_type: 'soft')
+        @user.active.should be_false
+        @user.should be_destroyed
+      end
+
+      it "handle resource deletion through #destroy on an existing resource" do
+        @user = Foo::User.find(1)
+        @user.destroy(delete_type: 'soft')
+        @user.active.should be_false
+        @user.should be_destroyed
+      end
+    end
   end
 
   context 'customizing HTTP methods' do
