@@ -71,6 +71,9 @@ module Her
       #   @user = User.find(1)
       #   @user.destroy
       #   # Called via DELETE "/users/1"
+      #
+      #   @user.destroy(soft: 'true')
+      #   # Called via DELETE "/users/1?soft=true"
       def destroy(params = {})
         method = self.class.method_for(:destroy)
         run_callbacks :destroy do
@@ -156,6 +159,9 @@ module Her
         # @example
         #   User.destroy_existing(1)
         #   # Called via DELETE "/users/1"
+        #
+        #   User.destroy_existing(1, soft: 'true')
+        #   # Called via DELETE "/users/1?soft=true"
         def destroy_existing(id, params={})
           request(params.merge(:_method => method_for(:destroy), :_path => build_request_path(params.merge(primary_key => id)))) do |parsed_data, response|
             new(parse(parsed_data[:data]).merge(:_destroyed => true))
