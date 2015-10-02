@@ -50,11 +50,11 @@ module Her
       # @private
       def self.use_setter_methods(model, params)
         params ||= {}
+        setter_method_names = model.class.setter_method_names
 
         reserved_keys = [:id, model.class.primary_key] + model.class.association_keys
         model.class.attributes *params.keys.reject { |k| reserved_keys.include?(k) || reserved_keys.map(&:to_s).include?(k) }
 
-        setter_method_names = model.class.setter_method_names
         params.inject({}) do |memo, (key, value)|
           setter_method = key.to_s + '='
           if setter_method_names.include?(setter_method)
